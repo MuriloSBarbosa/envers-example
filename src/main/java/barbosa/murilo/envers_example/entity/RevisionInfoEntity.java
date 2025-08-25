@@ -35,4 +35,6 @@ public class RevisionInfoEntity {
     private String modifiedBy;
 
     private String ipAddress;
+    private String requestUri;
+    private String httpMethod;
 }

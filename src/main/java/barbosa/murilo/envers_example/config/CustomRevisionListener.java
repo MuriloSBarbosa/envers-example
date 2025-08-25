@@ -16,6 +16,10 @@ public class CustomRevisionListener implements RevisionListener {
         Optional.ofNullable(((ServletRequestAttributes) RequestContextHolder
                     .getRequestAttributes()))
               .map(ServletRequestAttributes::getRequest)
-              .ifPresent(request -> rev.setIpAddress(request.getRemoteAddr()));
+              .ifPresent(request -> {
+                  rev.setIpAddress(request.getRemoteAddr());
+                  rev.setRequestUri(request.getRequestURI());
+                  rev.setHttpMethod(request.getMethod());
+              });
     }
 }

@@ -21,7 +21,9 @@ CREATE TABLE revinfo (
     rev BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     revtstmp BIGINT,
     modified_by VARCHAR(255),
-    ip_address VARCHAR(45)
+    ip_address VARCHAR(45),
+    request_uri VARCHAR(500),
+    http_method VARCHAR(10)
 );
 -- audit table
 CREATE TABLE book_AUD (
