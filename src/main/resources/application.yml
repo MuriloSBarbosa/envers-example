@@ -1,0 +1,21 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: envers-example
+
+  # Database configuration
+  jpa:
+    properties:
+      hibernate:
+        show_sql: ${SPRING_JPA_SHOW_SQL:false}
+        format_sql: true
+
+  datasource:
+    url: jdbc:postgresql://${DB_SERVER:localhost}:${DB_PORT:5432}/${POSTGRES_DB:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:password}
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}

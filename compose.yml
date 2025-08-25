@@ -1,0 +1,10 @@
+services:
+  database:
+    image: postgres:13
+    container_name: envers-example-db
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
