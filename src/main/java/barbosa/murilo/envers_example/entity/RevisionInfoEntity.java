@@ -1,12 +1,12 @@
 package barbosa.murilo.envers_example.entity;
 
+import barbosa.murilo.envers_example.config.CustomRevisionListener;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.RevisionEntity;
@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @Setter
 @Table(name = "revinfo")
-@RevisionEntity
+@RevisionEntity(CustomRevisionListener.class)
 @EntityListeners(AuditingEntityListener.class)
 public class RevisionInfoEntity {
 
@@ -34,7 +34,5 @@ public class RevisionInfoEntity {
     @LastModifiedBy
     private String modifiedBy;
 
-    public Instant getRevisionInstant() {
-        return Instant.ofEpochMilli(revtstmp);
-    }
+    private String ipAddress;
 }

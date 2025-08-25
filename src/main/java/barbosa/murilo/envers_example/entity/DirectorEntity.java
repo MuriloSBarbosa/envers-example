@@ -4,9 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +15,11 @@ import org.hibernate.envers.Audited;
 @Audited
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "book")
-public class BookEntity {
+@Entity(name = "director")
+public class DirectorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String title;
-    private String genre;
-    private LocalDate releaseDate;
-    private double rating;
-    @Audited
-    private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "director_id")
-    private DirectorEntity director;
+    private String name;
 }
