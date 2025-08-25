@@ -13,6 +13,11 @@ import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,19 +46,34 @@ public class BookController {
 
     @Transactional
     @GetMapping("/{id}/revisions")
-    public List<BookRevisionDTO> getBookRevisions(@PathVariable String id) {
+    public Page<BookRevisionDTO> getBookRevisions(@PathVariable String id,
+          @PageableDefault Pageable pageable) {
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
         AuditQuery query = auditReader.createQuery()
               .forRevisionsOfEntity(BookEntity.class, false, true)
-              .add(AuditEntity.id().eq(id));
+              .add(AuditEntity.id().eq(id))
+              .addOrder(AuditEntity.revisionNumber().desc());
 
+        // Get total count
+        AuditQuery countQuery = auditReader.createQuery()
+              .forRevisionsOfEntity(BookEntity.class, false, true)
+              .add(AuditEntity.id().eq(id));
+        int total = countQuery.getResultList().size();
+
+        // Apply pagination
+        int page = pageable.getPageNumber();
+        int size = pageable.getPageSize();
+        query.setFirstResult(page * size);
+        query.setMaxResults(size);
+
+        // Fetch results
         List<Object[]> results = query.getResultList();
 
-        return results.stream().map(row -> {
-            BookEntity entity = (BookEntity) row[0];       // entity state
-            RevisionInfoEntity revision = (RevisionInfoEntity) row[1]; // revision info
-            RevisionType revType = (RevisionType) row[2];   // revtype
+        List<BookRevisionDTO> content = results.stream().map(row -> {
+            BookEntity entity = (BookEntity) row[0];
+            RevisionInfoEntity revision = (RevisionInfoEntity) row[1];
+            RevisionType revType = (RevisionType) row[2];
 
             return new BookRevisionDTO(
                   entity.getId(),
@@ -68,6 +88,8 @@ public class BookController {
                   revType
             );
         }).toList();
+
+        return new PageImpl<>(content, PageRequest.of(page, size), total);
     }
 
 
