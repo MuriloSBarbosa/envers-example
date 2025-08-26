@@ -28,7 +28,6 @@ public class BookEntity {
     private String genre;
     private LocalDate releaseDate;
     private double rating;
-    @Audited
     private String description;
 
     @ManyToOne
